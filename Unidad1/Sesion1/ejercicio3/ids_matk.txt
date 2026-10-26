@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE eSearchResult PUBLIC "-//NLM//DTD esearch 20060628//EN" "https://eutils.ncbi.nlm.nih.gov/eutils/dtd/20060628/esearch.dtd">
+<eSearchResult><Count>12</Count><RetMax>5</RetMax><RetStart>0</RetStart><IdList>
+<Id>1594610161</Id>
+<Id>1594610159</Id>
+<Id>1594609959</Id>
+<Id>1594609957</Id>
+<Id>45775371</Id>
+</IdList><TranslationSet><Translation>     <From>Pinus patula[Organism]</From>     <To>"Pinus patula"[Organism]</To>    </Translation></TranslationSet><TranslationStack>   <TermSet>    <Term>"Pinus patula"[Organism]</Term>    <Field>Organism</Field>    <Count>81</Count>    <Explode>Y</Explode>   </TermSet>   <TermSet>    <Term>matK[Gene]</Term>    <Field>Gene</Field>    <Count>302565</Count>    <Explode>N</Explode>   </TermSet>   <OP>AND</OP>  </TranslationStack><QueryTranslation>"Pinus patula"[Organism] AND matK[Gene]</QueryTranslation></eSearchResult>
