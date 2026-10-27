@@ -1,92 +1,90 @@
 # Reproducible Bioinformatics — Session 1.3
 
-## Overview
+## 1. Introduction
 
-This folder contains scripts and notes for the R programming and data-analysis exercises completed during Session 1.3 of the Reproducible Bioinformatics course.
+This session introduces basic programming and data analysis in R, including variables, numerical operations, loops, conditional statements, data import, exploratory data analysis, and scientific visualization.
 
-The activities cover basic R operations, loops, data import, data exploration, genetic differentiation, and isolation-by-resistance analyses.
+The exercises also provide an introduction to genetic differentiation and isolation-by-resistance analyses. The main goals of this report are to document the implemented scripts, summarize the available results, and provide a reproducible record of the work completed.
 
-## Exercises
+## 2. Methods
 
-### Exercise 1 — Variables and logarithms
+The exercises were implemented in R and organized in separate scripts. Maize collection metadata were imported and explored using base R functions. Numerical examples were used to practice arithmetic, loops, and conditional logic. Population-genetic exercises involved Mantel and partial Mantel tests, as described in the available exercise notes and scripts.
 
-Introduces variables and logarithmic operations in R.
+Scripts are located in `scripts/`, explanatory notes for Exercise 6 are in `ejercicio6.md`, and exported figures are stored in `figures/`.
 
-[View script](scripts/ejercicio1.R)
+## 3. Results
 
-### Exercise 2 — Adding 2 to numbers from 1 to 150
+### Exercises 1–3: Basic R programming
 
-Practices numerical sequences and applying an arithmetic operation to a range of values.
+- [Exercise 1](scripts/ejercicio1.R): variables and logarithmic operations.
+- [Exercise 2](scripts/ejercicio2.R): adding two to integers from 1 to 150.
+- [Exercise 3](scripts/ejercicio3.R): counting numbers greater than 20.
 
-[View script](scripts/ejercicio2.R)
+These exercises provide practice with basic R syntax, numerical sequences, arithmetic operations, and logical conditions.
 
-### Exercise 3 — Counting numbers greater than 20
+### Exercise 4: Importing maize metadata
 
-Practices conditional evaluation and counting values that satisfy a numerical condition.
+[View script](scripts/ejercicio4.R). The script checks the input file, imports the maize metadata, and inspects the resulting table.
 
-[View script](scripts/ejercicio3.R)
+### Exercise 5: Loops and division
 
-### Exercise 4 — Importing maize metadata
+[View script](scripts/ejercicio5.R). A `for` loop divides 35 by the integers from 1 to 10. The modified loop uses `next` to skip even divisors and stores the odd-divisor results in a data frame.
 
-Checks whether the input file exists, imports the maize metadata table from the course environment, and inspects the resulting dataset.
+The recorded results for odd divisors were 35, approximately 11.67, 7, 5, and approximately 3.89 for divisors 1, 3, 5, 7, and 9, respectively.
 
-[View script](scripts/ejercicio4.R)
+### Exercise 6: Isolation by resistance
 
-### Exercise 5 — Loops and division
+[View exercise notes](ejercicio6.md). The notes describe an analysis involving 13 resistance scenarios. Effective-distance matrices are compared with transformed genetic differentiation values using `B.Fst / (1 - B.Fst)`, and Mantel correlation coefficients and p-values are collected.
 
-Uses a `for` loop to divide 35 by the integers from 1 to 10. The exercise then uses `next` to skip even divisors and stores the results for odd divisors in a data frame.
+The explanatory notes are present in this repository, but the executable script and the complete scenario-specific results have not been added here.
 
-The documented odd-divisor results are: 35/1 = 35, 35/3 ≈ 11.67, 35/5 = 7, 35/7 = 5, and 35/9 ≈ 3.89.
+### Exercise 7: Function test
 
-[View script](scripts/ejercicio5.R)
+[View script](scripts/ejercicio7.R). The recorded output was 0.04.
 
-### Exercise 6 — Isolation by resistance
+### Exercise 8: Partial Mantel tests
 
-The available notes describe an analysis of 13 resistance scenarios. Effective-distance matrices are compared with transformed genetic differentiation values using `B.Fst / (1 - B.Fst)`. Mantel correlation coefficients and p-values are collected to compare the association across scenarios.
+[View script](scripts/ejercicio8.R). Partial Mantel tests were performed for the present and the LGM scenario labelled 1800 in the exercise data, controlling for flat geographic distance.
 
-The current repository contains the explanatory notes, but the corresponding executable exercise script has not yet been confirmed in this folder.
+| Scenario | Mantel correlation (r) | p-value |
+|---|---:|---:|
+| Present | 0.05878 | 0.44722 |
+| LGM (labelled 1800) | 0.2437 | 0.27083 |
 
-[View exercise notes](ejercicio6.md)
+Neither test was statistically significant at the 0.05 level.
 
-### Exercise 7 — Function test
+### Exercise 9: Exploratory analysis of maize metadata
 
-Tests a function from the exercise. The recorded output was 0.04.
-
-[View script](scripts/ejercicio7.R)
-
-### Exercise 8 — Partial Mantel tests
-
-Performs partial Mantel tests for the present and the Last Glacial Maximum (LGM, approximately 1800 in the exercise data), controlling for the flat-distance matrix.
-
-The recorded results were:
-
-- Present: r = 0.05878, p = 0.44722.
-- LGM: r = 0.2437, p = 0.27083.
-
-Neither test was statistically significant at the 0.05 significance level. These results do not provide sufficient evidence of an association under the tested models; they do not prove that no relationship exists.
-
-[View script](scripts/ejercicio8.R)
-
-### Exercise 9 — Exploring maize collection metadata
-
-Imports and explores the maize collection metadata, checks its dimensions, variable names, missing values and data types, and summarizes the collection altitudes and collection years.
-
-The dataset was loaded with 165 observations and 22 variables. The script also generated a histogram of collection altitudes and a scatter plot of the geographic coordinates.
+[View script](scripts/ejercicio9.R). The imported dataset contained 165 observations and 22 variables. The script examines variable names, data types, missing values, summary statistics, collection altitudes, and collection years.
 
 #### Altitude distribution
 
-![Histogram of collection altitudes](figures/ejercicio9_histograma_altitud.png)
+![Histogram of maize collection altitudes](figures/ejercicio9_histograma_altitud.png)
 
 #### Geographic distribution
 
 ![Geographic distribution of maize collections](figures/ejercicio9_distribucion_geografica.png)
 
-[View script](scripts/ejercicio9.R)
+The plots provide an initial view of the altitude distribution and the geographic coordinates of the collections.
 
-## Reproducibility notes
+## 4. Discussion
 
-- Scripts are stored in the `scripts/` directory.
-- Figures generated for Exercise 9 are stored in `figures/` and embedded above using relative paths.
-- Some input data and helper scripts remain in the course-material directory rather than in this repository. File paths may therefore need to be adjusted when running the scripts on another computer.
-- The Exercise 9 import produced character-encoding warnings. Although the dataset loaded and the figures were generated, text fields should be checked for encoding issues before further analysis.
-- Exercise 10 is not included in this report.
+The programming exercises demonstrate basic numerical operations, loops, conditional logic, and data-frame construction. The metadata exercise illustrates how an imported biological dataset can be assessed before more advanced analyses.
+
+For Exercise 8, both p-values exceed 0.05. Therefore, these tests do not provide statistically significant evidence of an association under the tested models. This does not establish that no relationship exists.
+
+The Exercise 9 import generated character-encoding warnings. Although the dataset loaded and the figures were generated, text fields should be checked before further analyses. The current exploratory script documents the initial dataset structure and plots, but additional requested summaries or subsets should be added if they are part of the final assignment requirements.
+
+## 5. Conclusions
+
+This session provides practical experience with R programming, data import, exploratory analysis, and scientific plotting. It also introduces the interpretation of Mantel-based correlation results and the importance of distinguishing a non-significant result from evidence that an effect is absent.
+
+The report and scripts provide a starting point for reproducible analysis. Further work should include resolving the metadata encoding warnings, documenting complete outputs, and adding the executable script and full results for Exercise 6. Exercise 10 was not completed and is not reported as a completed activity.
+
+## Reproducibility
+
+- R scripts: [`scripts/`](scripts/)
+- Exercise 6 notes: [`ejercicio6.md`](ejercicio6.md)
+- Figures: [`figures/`](figures/)
+
+Some input data and helper scripts remain in the course-material directory and are not included in this repository. Consequently, paths may need to be adjusted to reproduce all analyses on another computer.
