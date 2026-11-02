@@ -383,6 +383,8 @@ The observed change in read length reflects the characteristics of the filtered 
 
 ![Sequence Length Distribution](<resultados_fastqc/figuras informe U2_S1/Sequence Length Distribution.JPG>)
 
+Figure 1. Distribution of read lengths before and after filtering. The length distribution of the sequences analyzed using FastQC is shown. (A) Original S3_R1 reads; (B) filtered S3_R1 reads; (C) original S3_R2 reads; and (D) filtered S3_R2 reads. The original reads have a length of 251 bp, whereas the filtered reads show variable lengths ranging from 35 to 251 bp.
+
 ### 4.2. Per Sequence GC Content
 
 This figure shows the distribution of GC content across individual sequences in the four datasets.
@@ -392,6 +394,8 @@ The average GC content reported in Basic Statistics was 43% for original R1, 44%
 The Per Sequence GC Content module evaluates the overall distribution rather than only the average GC percentage. This distinction helps explain why some datasets received a Fail classification despite having similar average GC values.
 
 ![Per Sequence GC Content](<resultados_fastqc/figuras informe U2_S1/Per Sequence GC Content.JPG>)
+
+Figure 2. Distribution of per-sequence GC content before and after filtering. The distribution of guanine and cytosine (GC) content across the reads analyzed using FastQC is shown. (A) Original S3_R1 reads; (B) filtered S3_R1 reads; (C) original S3_R2 reads; and (D) filtered S3_R2 reads. The reported average GC content was 43%, 44%, 44%, and 43%, respectively. This distribution allows the base composition of the reads to be assessed and potential deviations from the expected GC profile to be identified.
 
 ### 4.3. Per Base Sequence Quality
 
@@ -403,6 +407,8 @@ The filtered R1 and R2 datasets show quality profiles that remain high across mo
 
 ![Per Base Sequence Quality](<resultados_fastqc/figuras informe U2_S1/Per Base Sequence Quality.JPG>)
 
+Figure 3. Per-base sequence quality across reads before and after filtering. The distributions of Phred quality scores at each read position, as reported by FastQC, are shown. (A) Original S3_R1 reads; (B) filtered S3_R1 reads; (C) original S3_R2 reads; and (D) filtered S3_R2 reads. The plots allow comparison of base quality across read positions and illustrate the changes associated with filtering, particularly the decrease in quality toward the 3′ end of the original reads.
+
 ### 4.4. Adapter Content
 
 This figure compares adapter content in the original and filtered datasets.
@@ -410,6 +416,8 @@ This figure compares adapter content in the original and filtered datasets.
 Both original files received a Fail classification, whereas both filtered files received a Pass classification. This indicates a reduction in detectable adapter content following filtering.
 
 ![Adapter Content](<resultados_fastqc/figuras informe U2_S1/Adapter Content.JPG>)
+
+Figure 4. Adapter content before and after filtering. The proportion of adapter sequences detected across the reads using FastQC is shown. (A) Original S3_R1 reads; (B) filtered S3_R1 reads; (C) original S3_R2 reads; and (D) filtered S3_R2 reads. The reports show a decrease in adapter content after filtering, with the original reads classified as Fail and the filtered reads classified as Pass.
 
 ---
 
