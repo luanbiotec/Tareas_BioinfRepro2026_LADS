@@ -1,32 +1,32 @@
-# Unidad 3 – Sesión 1: Filtrado, alineamiento y evaluación de calidad de lecturas NGS
+# Unit 3 – Session 1: NGS Read Filtering, Alignment, and Quality Assessment
 
-**Autor:** Luan Americo Da Silva  
-**Programa:** Doctorado en Ciencias Biomédicas  
-**Institución:** Universidad de Chile  
-**Curso:** Bioinformática Reproducible  
-**Fecha:** 19 de noviembre de 2026
+**Author:** Luan Americo Da Silva  
+**Program:** Doctoral Program in Biomedical Sciences  
+**Institution:** University of Chile  
+**Course:** Reproducible Bioinformatics  
+**Date:** November 19, 2026
 
-## 1. Objetivo
+## 1. Objective
 
-Procesar las lecturas paired-end de la muestra S3 mediante eliminación de adaptadores y contaminantes, filtrado por calidad, alineamiento contra el genoma humano hg19 y evaluación del alineamiento utilizando Qualimap.
+To process paired-end reads from sample S3 through adapter and contaminant removal, quality filtering, alignment against the human hg19 reference genome, and alignment quality assessment using Qualimap.
 
-## 2. Herramientas
+## 2. Tools
 
-- **BBMap/BBDuk 38.90:** filtrado de adaptadores, PhiX y lecturas de baja calidad.
-- **BWA 0.7.17:** alineamiento contra hg19.
-- **Picard 2.25.2:** conversión, ordenamiento y asignación de grupos de lectura.
-- **Samtools 1.12:** indexación del BAM.
-- **Qualimap 2.2.1:** evaluación de cobertura, calidad de mapeo y otros parámetros.
-- **Referencia:** hg19.
-- **Regiones de interés:** `regiones_blanco.bed`.
+- **BBMap/BBDuk 38.90:** adapter, PhiX, and low-quality read filtering.
+- **BWA 0.7.17:** alignment against hg19.
+- **Picard 2.25.2:** SAM-to-BAM conversion, sorting, and read group assignment.
+- **Samtools 1.12:** BAM indexing.
+- **Qualimap 2.2.1:** assessment of coverage, mapping quality, and other alignment parameters.
+- **Reference genome:** hg19.
+- **Regions of interest:** `regiones_blanco.bed`.
 
-## 3. Metodología
+## 3. Methods
 
-### 3.1. Filtrado de lecturas
+### 3.1. Read filtering
 
-Se utilizó BBDuk para eliminar adaptadores, contaminantes PhiX y bases de baja calidad, evitando interferencias durante el alineamiento.
+BBDuk was used to remove adapters, PhiX contaminants, and low-quality bases, reducing potential interference during the alignment process.
 
-**Adaptadores:**
+**Adapter removal:**
 
 ```bash
 bbduk.sh -Xmx2g threads=1 \
@@ -37,9 +37,9 @@ out2=S3_R2_filter1.fastq.gz \
 ref=~/resources/bbmap/adapters.fa tpe tbo
 ```
 
-Se conservaron 63.682 lecturas (75,95 %).
+A total of 63,682 reads were retained (75.95%).
 
-**PhiX:**
+**PhiX removal:**
 
 ```bash
 bbduk.sh -Xmx2g threads=1 \
@@ -50,9 +50,9 @@ out2=S3_R2_filter2.fastq.gz \
 ref=~/resources/bbmap/phix174_ill.ref.fa.gz
 ```
 
-Se eliminaron 8 lecturas y se conservaron 63.674 (99,99 % de la etapa anterior).
+Eight reads were removed, leaving 63,674 reads (99.99% of the previous stage).
 
-**Calidad:**
+**Quality filtering:**
 
 ```bash
 bbduk.sh -Xmx2g threads=1 \
@@ -63,11 +63,11 @@ out2=S3_R2_filter3.fastq.gz \
 qtrim=w trimq=20 minlength=30 minavgquality=20
 ```
 
-Se aplicó trimming por calidad (Q20), longitud mínima de 30 nucleótidos y calidad promedio mínima de Q20. Se conservaron 62.270 lecturas (97,80 % de la entrada a esta etapa).
+Quality trimming (Q20), a minimum read length of 30 nucleotides, and a minimum average quality of Q20 were applied. A total of 62,270 reads were retained (97.80% of the reads entering this stage).
 
-### 3.2. Alineamiento
+### 3.2. Alignment
 
-BWA-MEM permitió alinear las lecturas filtradas contra hg19. Se utilizaron cuatro hilos (`-t 4`) y la opción `-M` para marcar alineamientos secundarios compatibles con herramientas posteriores.
+BWA-MEM was used to align the filtered reads against hg19. Four threads (`-t 4`) were used, together with the `-M` option to mark shorter split hits as secondary alignments, maintaining compatibility with downstream tools.
 
 ```bash
 bwa mem -t 4 -M /datos/reference/genomes/hg19_reference/hg19.fasta \
@@ -76,21 +76,21 @@ S3_R2_filter3.fastq.gz \
 > S3.sam
 ```
 
-### 3.3. Preparación del BAM
+### 3.3. BAM file preparation
 
-El SAM se convirtió a BAM, un formato binario más compacto y eficiente para almacenar alineamientos.
+The SAM file was converted to BAM, a more compact binary format for storing alignment information.
 
 ```bash
 java -jar /opt/picard/picard-2.25.2/picard.jar SamFormatConverter -I S3.sam -O S3.bam
 ```
 
-Luego, se ordenaron las lecturas por coordenadas genómicas para facilitar el acceso y análisis de regiones.
+The reads were then sorted by genomic coordinates to facilitate access to and analysis of specific genomic regions.
 
 ```bash
 java -jar /opt/picard/picard-2.25.2/picard.jar SortSam I=S3.bam O=S3_sorted.bam SORT_ORDER=coordinate
 ```
 
-Se agregaron grupos de lectura (Read Groups), metadatos que permiten identificar la biblioteca y mantener compatibilidad con herramientas de análisis posteriores.
+Read groups were added as metadata to identify the sequencing library and maintain compatibility with downstream analysis tools.
 
 ```bash
 java -jar /opt/picard/picard-2.25.2/picard.jar AddOrReplaceReadGroups \
@@ -98,15 +98,15 @@ java -jar /opt/picard/picard-2.25.2/picard.jar AddOrReplaceReadGroups \
 -ID sample -LB Paired-end -PL Illumina -PU Unknown -SM sample
 ```
 
-Finalmente, se indexó el BAM mediante Samtools, generando un archivo BAI para acceder rápidamente a regiones específicas.
+Finally, the BAM file was indexed using Samtools, generating a BAI file that enables rapid access to specific genomic regions.
 
 ```bash
 samtools index S3_sorted_RG.bam
 ```
 
-### 3.4. Evaluación mediante Qualimap
+### 3.4. Qualimap assessment
 
-Qualimap BAM QC evaluó cobertura, calidad de mapeo, tamaño de inserto, duplicación estimada y clipping, utilizando el archivo BED de regiones blanco.
+Qualimap BAM QC was used to assess coverage, mapping quality, insert size, estimated duplication, and read clipping, using the BED file containing the target regions.
 
 ```bash
 JAVA_OPTS="-Xms32m -Xmx1200M" qualimap bamqc \
@@ -115,63 +115,74 @@ JAVA_OPTS="-Xms32m -Xmx1200M" qualimap bamqc \
 -outdir ./S3_sorted_RG
 ```
 
-**Problema técnico:** la ejecución inicial falló por incompatibilidad con la opción Java `-XX:MaxPermSize=1024m` (`Unrecognized VM option`). Se resolvió sobrescribiendo temporalmente las opciones mediante `JAVA_OPTS` y ajustando la memoria máxima a 1200 MB (`-Xmx1200M`), sin modificar la instalación ni la configuración permanente del servidor. Qualimap finalizó correctamente y generó el reporte HTML y resultados de BAM QC.
+**Technical issue and solution:** The initial execution failed because of an incompatibility with the Java option `-XX:MaxPermSize=1024m` (`Unrecognized VM option`). The issue was resolved by temporarily overriding the Java options through `JAVA_OPTS` and setting the maximum memory allocation to 1200 MB (`-Xmx1200M`). This approach did not require modifying the software installation or the server's permanent configuration. Qualimap then completed successfully and generated the HTML report and BAM QC results.
 
-## 4. Resultados
+## 4. Results
 
-### 4.1. Alineamiento
+### 4.1. Alignment
 
-Qualimap reportó 62.347 registros, de los cuales 62.323 fueron mapeados (99,96 %). La calidad de mapeo promedio (MAPQ) fue de 58,74, indicando elevada confianza global en la asignación.
+Qualimap reported 62,347 read records, of which 62,323 were mapped (99.96%). The mean mapping quality (MAPQ) was 58.74, indicating high overall confidence in read assignment.
 
-### 4.2. Cobertura
+### 4.2. Coverage
 
-La cobertura promedio fue de 101,28X, con una desviación estándar de 99,57X. El 91,44 % presentó cobertura ≥1X, el 72,49 % ≥30X y el 63,11 % ≥50X.
+Mean coverage was 101.28X, with a standard deviation of 99.57X. A total of 91.44% of the evaluated positions reached ≥1X coverage, 72.49% reached ≥30X, and 63.11% reached ≥50X.
 
-La desviación estándar cercana a la media indica una distribución heterogénea de la profundidad.
+The standard deviation, which was close to the mean, indicates a heterogeneous coverage distribution.
 
-### 4.3. Tamaño de inserto
+### 4.3. Insert size
 
-La mediana fue de 247 bp, la media de 251,66 bp y la desviación estándar de 40,04 bp. La distribución se concentró principalmente alrededor de estos valores, observándose una cola de fragmentos de mayor tamaño.
+The median insert size was 247 bp, the mean was 251.66 bp, and the standard deviation was 40.04 bp. The distribution was mainly concentrated around these values, with a tail of larger fragments.
 
-### 4.4. Errores y duplicación
+### 4.4. Errors and duplication
 
-La tasa general de error estimada fue de 0,27 %. Se identificaron 23.142 mismatches, 1.174 inserciones y 1.709 deleciones.
+The estimated overall error rate was 0.27%. The analysis identified 23,142 mismatches, 1,174 insertions, and 1,709 deletions.
 
-La duplicación estimada fue de 38,12 %, un parámetro relevante para evaluar la complejidad de la biblioteca y la redundancia de lecturas.
+Estimated duplication was 38.12%, an important parameter for evaluating library complexity and read redundancy.
 
-### 4.5. Soft-clipping
+### 4.5. Soft clipping
 
-Se identificó en el SAM una lectura con CIGAR `2S100M`, correspondiente a dos nucleótidos soft-clipped y cien nucleótidos alineados. Los nucleótidos soft-clipped permanecen en la secuencia, pero no participan del alineamiento, pudiendo reflejar diferencias respecto de la referencia u otras características de los extremos.
+A read with the CIGAR string `2S100M` was identified in the SAM file. This indicates two soft-clipped nucleotides and 100 aligned nucleotides. Soft-clipped bases remain in the read sequence but are not included in the alignment. This may reflect differences from the reference sequence or other features at the read ends.
 
-## 5. Figuras
+## 5. Figures
 
-**Figura 1. Cobertura a lo largo de la referencia.** Distribución de profundidad de secuenciación que permite identificar regiones con cobertura heterogénea y sectores menos representados.
+**Figure 1. Coverage across the reference.** Sequencing depth distribution, showing heterogeneous coverage and less-represented regions.
 
-**Figura 2. Calidad de mapeo (MAPQ).** Distribución de los valores de calidad asignados a las lecturas alineadas, utilizada para evaluar la confianza del alineamiento.
+![Figure 1. Coverage across the reference](resultados_qualimap/figures/genome_coverage_across_reference.png)
 
-**Figura 3. Tamaño de inserto.** Distribución de las distancias estimadas entre lecturas paired-end, que permite caracterizar los fragmentos secuenciados e identificar valores atípicos.
+**Figure 2. Mapping quality (MAPQ).** Distribution of mapping quality values assigned to aligned reads, used to assess alignment confidence.
 
-**Figura 4. Perfil de clipping.** Distribución de extremos de lectura no incorporados al alineamiento, permitiendo identificar posiciones donde se concentra el clipping.
+![Figure 2. Mapping quality histogram](resultados_qualimap/figures/genome_mapping_quality_histogram.png)
 
-## 6. Discusión
+**Figure 3. Insert size.** Distribution of estimated distances between paired-end reads, used to characterize sequenced fragments and identify outliers.
 
-La elevada proporción de lecturas mapeadas (99,96 %) y el MAPQ promedio de 58,74 indican que la mayoría de las lecturas se asignaron con alta confianza a la referencia. Sin embargo, un alineamiento exitoso no garantiza una cobertura uniforme: la desviación estándar (99,57X) fue prácticamente equivalente a la media (101,28X), evidenciando una distribución heterogénea de profundidad. Esto implica que algunas regiones pueden estar altamente representadas mientras otras presentan cobertura insuficiente, lo que puede afectar la detección de variantes o la interpretación de resultados en regiones específicas.
+![Figure 3. Insert size histogram](resultados_qualimap/figures/genome_insert_size_histogram.png)
 
-La duplicación estimada de 38,12 % sugiere una proporción considerable de lecturas redundantes, que podría reducir la diversidad efectiva de la biblioteca y hacer que la profundidad aparente sobreestime la cantidad de información independiente disponible. No obstante, Qualimap reporta una estimación y no se realizó eliminación de duplicados, por lo que no puede afirmarse que todos correspondan a duplicados PCR.
+**Figure 4. Read clipping profile.** Distribution of read ends not incorporated into the alignment, allowing identification of positions where clipping is concentrated.
 
-El soft-clipping refleja la presencia de bases que no pudieron incorporarse al alineamiento. Puede originarse por diferencias respecto de la referencia, secuencias de baja calidad en los extremos, adaptadores residuales u otras características de las lecturas. La identificación de `2S100M` demuestra este fenómeno, aunque una lectura individual no permite determinar su causa.
+![Figure 4. Read clipping profile](resultados_qualimap/figures/genome_reads_clipping_profile.png)
 
-La interpretación de la cobertura debe considerar el carácter dirigido del análisis y las regiones incluidas en el BED. La ausencia de cobertura en regiones fuera del objetivo de secuenciación no necesariamente representa un problema técnico. Por ello, es importante evaluar la cobertura de las regiones de interés y no extrapolar los resultados al genoma completo.
+## 6. Discussion
 
-## 7. Conclusiones
+The high proportion of mapped reads (99.96%) and mean MAPQ of 58.74 indicate that most reads were assigned to the reference with high confidence. However, successful alignment does not guarantee uniform coverage: the standard deviation (99.57X) was nearly equivalent to the mean (101.28X), demonstrating a heterogeneous depth distribution.
 
-El procesamiento de la muestra S3 permitió realizar el filtrado de lecturas, eliminar contaminantes, alinear contra hg19 y evaluar la calidad del archivo BAM mediante Qualimap.
+This means that some regions may be highly represented while others have insufficient coverage, potentially affecting variant detection and the interpretation of results in specific regions.
 
-Se obtuvo una elevada proporción de lecturas mapeadas (99,96 %) y una calidad promedio de mapeo alta (58,74). Sin embargo, la cobertura fue heterogénea, con una desviación estándar cercana a la media y un 72,49 % alcanzando al menos 30X.
+The estimated duplication rate of 38.12% suggests a considerable proportion of redundant reads, which could reduce the effective library diversity and cause apparent sequencing depth to overestimate the amount of independent information available. Nevertheless, Qualimap provides an estimate, and duplicate removal was not performed; therefore, it cannot be concluded that all these reads correspond to PCR duplicates.
 
-En conjunto, los resultados indican un alineamiento global de alta calidad, aunque la profundidad no es uniforme y existe duplicación estimada considerable. Estos parámetros deben considerarse en análisis posteriores, priorizando la cobertura de las regiones de interés y la calidad de la información independiente disponible.
+Soft clipping reflects the presence of bases that could not be incorporated into the alignment. Possible causes include differences from the reference, low-quality bases at read ends, residual adapters, or other read characteristics. The identification of `2S100M` demonstrates this phenomenon, although a single read is insufficient to determine its underlying cause.
 
-## 8. Anexos
+Coverage interpretation must consider the targeted nature of the analysis and the regions included in the BED file. The absence of coverage in regions outside the sequencing targets does not necessarily indicate a technical problem. Therefore, coverage should be evaluated within the regions of interest rather than extrapolated to the entire genome.
 
-Se incorpora el reporte completo de Qualimap, incluyendo el informe HTML, los resultados numéricos y las figuras complementarias.
+## 7. Conclusions
 
+Sample S3 processing enabled read filtering, contaminant removal, alignment against hg19, and BAM file quality assessment using Qualimap.
+
+A high proportion of reads mapped successfully (99.96%), with a high mean mapping quality (58.74). However, coverage was heterogeneous, with a standard deviation close to the mean and 72.49% of evaluated positions reaching at least 30X coverage.
+
+Overall, the results indicate high global alignment quality, although sequencing depth was not uniform and estimated duplication was considerable. These parameters should be considered in downstream analyses, prioritizing coverage within the regions of interest and the quality of the available independent information.
+
+## 8. Supplementary materials
+
+The complete Qualimap report is included in this repository, comprising the HTML report, summary results, raw numerical data, and complementary figures.
+
+To view the complete interactive report, open `resultados_qualimap/qualimapReport.html` in a web browser. The associated CSS, JavaScript, and image resources are included in the same directory structure.
