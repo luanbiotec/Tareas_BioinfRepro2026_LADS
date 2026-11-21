@@ -189,7 +189,13 @@ To view the complete interactive report, open `resultados_qualimap/qualimapRepor
 
 
 
-# Part 2 – Variant Identification, Annotation, and Prioritization
+# Unit 3 – Session 1: Part 2 – Variant Identification, Annotation, and Prioritization
+
+**Author:** Luan Americo Da Silva  
+**Program:** Doctoral Program in Biomedical Sciences  
+**Institution:** University of Chile  
+**Course:** Reproducible Bioinformatics  
+**Date:** November 21, 2026
 
 ## 9. Objective
 
@@ -369,6 +375,7 @@ The visualization was consistent with the presence of the computationally identi
 
 
 ![Figure 5. IGV visualization of the BRCA2 frameshift variant in sample S3](IGV_S3/Captura%20de%20pantalla%202026-11-21%20050842.png)
+
 **Figure 5.** IGV visualization of the BRCA2 frameshift variant at chr13:32914935 in the hg19 reference genome. The CTA>C variant, annotated as c.6445_6446del (p.Ile2149Ter), is shown together with the aligned sequencing reads supporting its identification in sample S3.
 
 ## 13. Discussion
