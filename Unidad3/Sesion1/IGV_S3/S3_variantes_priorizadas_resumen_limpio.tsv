@@ -1,0 +1,13 @@
+Gen	Coordenada	REF	ALT	Consecuencia principal	HGVS proteína	CADD	ClinVar
+BRAF	7:140434574	C	CA	splice_region_variant		6.869	Benign/Likely_benign
+PAX5	9:36882185	A	T	intron_variant		20.6	No disponible
+PAX5	9:37002762	A	G	missense_variant	p.Ser163Pro; p.Ser97Pro; p.Ser55Pro	24.1	No disponible
+PAX5	9:37034210	A	G	upstream_gene_variant		21.1	No disponible
+PAX5	9:37034211	A	T	upstream_gene_variant		21.3	No disponible
+PTEN	10:89720633	CT	C	splice_polypyrimidine_tract_variant		1.742	Benign/Likely_benign
+KMT2A	11:118369265	TA	T	intron_variant		0.220	Benign/Likely_benign
+FLT3	13:28624294	G	A	missense_variant	p.Thr227Met	21.0	Benign
+BRCA2	13:32907535	CT	C	intron_variant		0.354	Conflicting_classifications_of_pathogenicity
+BRCA2	13:32914935	CTA	C	frameshift_variant	p.Ile2149Ter	NA	Pathogenic
+RB1	13:48954159	CT	C	intron_variant		0.795	Benign/Likely_benign
+CEBPA-AS1;AC008738.1;CEBPA	19:33792731	G	GGCGGGT	inframe_insertion	p.His195_Pro196dup	18.12	Benign/Likely_benign
